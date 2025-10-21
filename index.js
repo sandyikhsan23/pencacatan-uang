@@ -297,6 +297,18 @@ bot.hears(/^help$|^\/help$/i, ctx => ctx.reply(
     "• reset  (hapus semua transaksi milikmu)"
 ));
 
-bot.launch().then(() => console.log("Bot Telegram berjalan (long-polling)…"));
+// --- Pastikan tidak ada webhook aktif dulu, baru mulai polling
+(async () => {
+  try {
+    await bot.telegram.deleteWebhook({ drop_pending_updates: true });
+    await bot.launch({ dropPendingUpdates: true });
+    console.log("✅ Bot Telegram berjalan (long-polling)…");
+  } catch (err) {
+    console.error("🚫 Gagal menjalankan bot:", err);
+    process.exit(1);
+  }
+})();
+
+// graceful stop saat Railway / server mati
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
