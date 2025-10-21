@@ -4,6 +4,8 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 
+console.log("BOT_TOKEN length:", (process.env.BOT_TOKEN || '').length);
+console.log("ADMIN_ID:", process.env.ADMIN_ID);
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use(session({ defaultSession: () => ({}) }));
